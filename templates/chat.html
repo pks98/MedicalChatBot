@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">Medical Chatbot</div>
+        <div class="chat-box" id="chatBox">
+            <div class="chat-message bot">
+                <img src="{{ url_for('static', filename='doctor.png') }}" alt="Doctor">
+                Hello! I am your medical assistant. How can I help you today?
+            </div>
+        </div>
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Ask a medical question...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            let input = document.getElementById("userInput");
+            let message = input.value.trim();
+            if (message === "") return;
+
+            let chatBox = document.getElementById("chatBox");
+
+            // Display user message
+            let userMessage = document.createElement("div");
+            userMessage.className = "chat-message user";
+            userMessage.innerHTML = `<img src="{{ url_for('static', filename='user.png') }}" alt='User'> ${message}`;
+            chatBox.appendChild(userMessage);
+            input.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                let response = await fetch("/get", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ question: message })
+                });
+
+                let data = await response.json();
+                
+                // Display bot response
+                let botMessage = document.createElement("div");
+                botMessage.className = "chat-message bot";
+                botMessage.innerHTML = `<img src="{{ url_for('static', filename='doctor.png') }}" alt='Doctor'> ${data.response}`;
+                chatBox.appendChild(botMessage);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+    </script>
+</body>
+</html>

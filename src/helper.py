@@ -40,3 +40,7 @@ def download_hugging_face_embedding():
     """
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     return embeddings
+
+
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
