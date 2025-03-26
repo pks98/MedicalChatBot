@@ -1,10 +1,12 @@
-sentence-transformers==2.2.2
+sentence_transformers
 langchain
 langchain-core
 langchain-community
 langchain-experimental
 langchain-groq
 langchain-openai
+langchain_huggingface
+langchain_pinecone
 flask
 pypdf
 python-dotenv
